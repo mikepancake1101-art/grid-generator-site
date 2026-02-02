@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Generator - Buy License</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        header {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+        main {
+            max-width: 600px;
+            width: 90%;
+            background: white;
+            padding: 30px;
+            margin: 40px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .description {
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .price {
+            font-size: 1.5em;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        form input, form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            word-wrap: break-word;
+        }
+        footer {
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            color: #777;
+            font-size: 0.9em;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Grid Generator</h1>
+    </header>
+    <main>
+        <div class="description">
+            <p>Grid Generator — мощный инструмент для инженеров, позволяющий быстро создавать и управлять сетками в Autodesk Civil 3D. Автоматизируйте рутинные задачи, повышайте точность и экономьте время на проектах.</p>
+            <p>Приобретите лицензию и получите полный доступ к функциям без ограничений.</p>
+        </div>
+        <div class="price">Цена: 4.99 USD</div>
+        <form id="paymentForm">
+            <label for="payCurrency">Валюта оплаты (крипта):</label>
+            <select id="payCurrency">
+                <option value="btc">BTC</option>
+                <option value="eth">ETH</option>
+                <option value="usdttrc20">USDT (TRON)</option>
+            </select>
+            
+            <label for="email">Ваш email (для отправки ключа):</label>
+            <input type="email" id="email" required>
+            
+            <button type="submit">Оплатить 4.99 USD</button>
+        </form>
+        
+        <div id="result"></div>
+    </main>
+    <footer>
+        &copy; 2026 Grid Generator. Все права защищены.
+    </footer>
+    
+    <script>
+        const form = document.getElementById('paymentForm');
+        const resultDiv = document.getElementById('result');
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const amount = 4.99;  // Фиксированная цена
+            const payCurrency = document.getElementById('payCurrency').value;
+            const email = document.getElementById('email').value;
+            
+            resultDiv.innerHTML = 'Создание платежа...';
+            
+            try {
+                const response = await fetch('https://activation-server01.onrender.com/create-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `amount=${amount}&pay_currency=${payCurrency}&email=${email}`
+                });
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    resultDiv.innerHTML = `
+                        <p>Адрес для оплаты: <strong>${data.pay_address}</strong></p>
+                        <p>Сумма: ${data.pay_amount} ${payCurrency.toUpperCase()}</p>
+                        <p>Invoice URL: <a href="${data.invoice_url}" target="_blank">Ссылка на платеж</a></p>
+                        <p>После подтверждения оплаты ключ будет отправлен на ваш email.</p>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<p>Ошибка: ${data.error}</p>`;
+                }
+            } catch (err) {
+                resultDiv.innerHTML = '<p>Ошибка соединения с сервером.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
