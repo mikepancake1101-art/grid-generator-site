@@ -46,33 +46,34 @@
 
     <script>
         document.getElementById('paymentForm').addEventListener('submit', async e => {
-            e.preventDefault();
-            const result = document.getElementById('result');
-            result.innerHTML = '<p>Создаём платёж...</p>';
+        e.preventDefault();
+        const result = document.getElementById('result');
+        result.innerHTML = '<p>Создаём платёж...</p>';
 
-            const response = await fetch('https://activation-server01.onrender.com/activate.php', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    action: 'create-payment',
-                    amount: 4.99,
-                    pay_currency: document.getElementById('payCurrency').value,
-                    email: document.getElementById('email').value
-                })
-            });
-
-            const data = await response.json();
-            if (data.status === 'success') {
-                result.innerHTML = `
-                    <p><strong>Адрес для оплаты:</strong> ${data.pay_address}</p>
-                    <p>Сумма: ${data.pay_amount} ${data.pay_currency.toUpperCase()}</p>
-                    <p><a href="${data.invoice_url}" target="_blank" style="color:#007bff;">Открыть платёжную страницу →</a></p>
-                    <p>После оплаты ключ придёт на email автоматически.</p>
-                `;
-            } else {
-                result.innerHTML = `<p style="color:red">Ошибка: ${data.error || 'Попробуйте позже'}</p>`;
-            }
+        const response = await fetch('https://activation-server01.onrender.com/activate.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                action: 'create-payment',
+                amount: 4.99,
+                pay_currency: document.getElementById('payCurrency').value,
+                email: document.getElementById('email').value
+            })
         });
+
+        const data = await response.json();
+        if (data.status === 'success') {
+            result.innerHTML = `
+                <p><strong>Адрес для оплаты:</strong> ${data.pay_address}</p>
+                <p>Сумма: ${data.pay_amount} ${data.pay_currency.toUpperCase()}</p>
+                <p><a href="${data.invoice_url}" target="_blank" style="color:#007bff;">Открыть платёжную страницу →</a></p>
+                <p>После оплаты ключ придёт на email автоматически.</p>
+            `;
+        } else {
+            result.innerHTML = `<p style="color:red">Ошибка: ${data.error || 'Попробуйте позже'}</p>`;
+        }
+    });
     </script>
 </body>
 </html>
+
