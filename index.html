@@ -25,21 +25,19 @@
             Мощный плагин для Autodesk Civil 3D<br>
             Быстрое создание сеток, автоматизация рутины, повышение точности проектов.
         </div>
-        <div class="price">5.10 USD — пожизненная лицензия</div>
+        <div class="price">5.00 USD — пожизненная лицензия</div>
 
         <form id="paymentForm">
             <label>Валюта оплаты:</label>
             <select id="payCurrency">
-                <option value="usdt">USDT (ERC20)</option>
-                <option value="btc">Bitcoin (BTC)</option>
-                <option value="eth">Ethereum (ETH)</option>
-                <option value="ltc">Litecoin (LTC)</option>
+                <option value="trx">TRON (TRX)</option>
+                <option value="xlm">Stellar (XLM)</option>
             </select>
 
             <label>Ваш email (ключ придёт сюда мгновенно после оплаты):</label>
             <input type="email" id="email" required placeholder="ivan@example.com">
 
-            <button type="submit">Оплатить 5.10 USD</button>
+            <button type="submit">Оплатить 5 USD</button>
         </form>
 
         <div id="result"></div>
@@ -59,7 +57,7 @@
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     action: 'create-payment',
-                    amount_usd: 5.10,
+                    amount_usd: 5.0,
                     pay_currency: payCurrency,
                     email: email
                 })
