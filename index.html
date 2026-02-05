@@ -142,18 +142,7 @@
                 if (data.status === 'ok') {
                     // Перенаправляем пользователя
                     if (data.payment_url) {
-                        // 1. Open Payment in NEW tab
-                        window.open(data.payment_url, '_blank');
-
-                        // 2. Redirect THIS tab to the waiting page
-                        // We need the license key (order_id) to check status.
-                        // create-payment.php returns: license_key, payment_url, etc.
-                        if (data.license_key) {
-                            window.location.href = `success.html?order_id=${data.license_key}`;
-                        } else {
-                            // Fallback if license_key missing (shouldn't happen)
-                            result.innerHTML = `<p style="color:red">Error: License Key not returned.</p>`;
-                        }
+                        window.location.href = data.payment_url;
                     } else {
                         result.innerHTML = `<p style="color:red">Error: Payment URL not returned.</p>`;
                     }
