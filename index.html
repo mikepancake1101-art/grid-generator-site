@@ -1,72 +1,118 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grid Generator — License</title>
+    <title>Chill Engineering Tools — License Purchase</title>
     <style>
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #f4f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            color: #1c1e21;
         }
 
         .card {
             background: white;
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
             text-align: center;
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
         }
 
         h1 {
-            margin-bottom: 20px;
-            font-size: 24px;
-            color: #333;
+            color: #007bff;
+            margin-bottom: 8px;
+            font-size: 28px;
+        }
+
+        .product-name {
+            font-weight: bold;
+            color: #4b4f56;
+            font-size: 20px;
+            margin-bottom: 24px;
+        }
+
+        .instructions {
+            text-align: left;
+            background: #fff9e6;
+            border-left: 4px solid #ffcc00;
+            padding: 15px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .instructions ol {
+            margin: 8px 0 0 20px;
+            padding: 0;
         }
 
         input[type="email"] {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
             box-sizing: border-box;
             font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        input[type="email"]:focus {
+            border-color: #007bff;
+            outline: none;
         }
 
         button {
             width: 100%;
-            padding: 12px;
-            background: #007bff;
+            padding: 14px;
+            background: #28a745;
             color: white;
             border: none;
-            border-radius: 6px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.1s;
         }
 
         button:hover {
-            background: #0056b3;
+            background: #218838;
+        }
+
+        button:active {
+            transform: scale(0.98);
         }
 
         button:disabled {
-            background: #ccc;
+            background: #94d3a2;
             cursor: not-allowed;
         }
 
+        .support {
+            margin-top: 30px;
+            font-size: 13px;
+            color: #8d949e;
+        }
+
+        .support a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
         .error {
-            color: red;
-            margin-top: 10px;
+            color: #dc3545;
+            margin-top: 15px;
             font-size: 14px;
+            font-weight: bold;
             display: none;
         }
     </style>
@@ -74,16 +120,42 @@
 
 <body>
     <div class="card">
-        <h1>Grid Generator License</h1>
-        <p>Enter your email to purchase a lifetime license ($10).</p>
+        <h1>Chill Engineering Tools</h1>
+        <div id="productDisplay" class="product-name">Software License</div>
+
+        <div class="instructions">
+            <strong>Important Process:</strong>
+            <ol>
+                <li>Enter your email and click "Pay".</li>
+                <li>Complete the payment on the next page.</li>
+                <li><strong>IMPORTANT:</strong> Do not close this browser tab until the payment is confirmed.</li>
+                <li>Your license key will appear right here after success.</li>
+            </ol>
+        </div>
+
         <form id="payForm">
-            <input type="email" id="email" placeholder="name@example.com" required>
-            <button type="submit" id="btn">Pay $10</button>
+            <input type="email" id="email" placeholder="Your Billing Email" required>
+            <button type="submit" id="btn">Proceed to Payment (<span id="priceDisplay">$10</span>)</button>
             <div id="error" class="error"></div>
         </form>
+
+        <div class="support">
+            Need help? Contact us: <br>
+            <a href="mailto:ChillEngineeringTools@gmail.com">ChillEngineeringTools@gmail.com</a>
+        </div>
     </div>
 
     <script>
+        // Use URL params for dynamic product data
+        // Example: ?p=grid_generator&n=Grid+Generator&price=10
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('p') || 'grid_generator';
+        const productName = urlParams.get('n') || 'Grid Generator';
+        const price = urlParams.get('price') || '10';
+
+        document.getElementById('productDisplay').textContent = productName;
+        document.getElementById('priceDisplay').textContent = '$' + price;
+
         const form = document.getElementById('payForm');
         const btn = document.getElementById('btn');
         const error = document.getElementById('error');
@@ -91,31 +163,41 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             btn.disabled = true;
-            btn.textContent = 'Processing...';
+            btn.textContent = 'Preparing Invoice...';
             error.style.display = 'none';
 
             const email = document.getElementById('email').value;
 
             try {
+                // Pointing to the activation server API
                 const res = await fetch('https://activation-server01.onrender.com/create-payment.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email })
+                    body: JSON.stringify({
+                        email,
+                        product_id: productId,
+                        product_name: productName,
+                        price: price
+                    })
                 });
+
+                if (!res.ok) {
+                    const errorData = await res.json();
+                    throw new Error(errorData.error || 'Server connection failed');
+                }
 
                 const data = await res.json();
 
-                if (res.ok && data.payment_url) {
-                    // Redirect to NOWPayments
+                if (data.payment_url) {
                     window.location.href = data.payment_url;
                 } else {
-                    throw new Error(data.error || 'Unknown error');
+                    throw new Error('Could not generate payment URL');
                 }
             } catch (err) {
-                error.textContent = err.message;
+                error.textContent = 'Error: ' + err.message;
                 error.style.display = 'block';
                 btn.disabled = false;
-                btn.textContent = 'Pay $10';
+                btn.textContent = 'Proceed to Payment ($' + price + ')';
             }
         });
     </script>
